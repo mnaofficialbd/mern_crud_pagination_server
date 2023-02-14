@@ -1,6 +1,6 @@
 ## Power_Hack
-### CRUD_&_Pagination explain in power_hack MERN_Project
-#### Server code: https://github.com/mnaofficialbd/power-hack-client
+### CRUD_&_Pagination explain in Product_Bazar MERN_Project
+#### Server code: https://github.com/mnaofficialbd/product-bazar-client
 ### Technology:
 
 #### `Frontend`
