@@ -12,6 +12,7 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.BD_USER}:${process.env.DB_PASS}@cluster0.bjmxp4e.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
+// console.log(MongoClient);
 
 const run = async () => {
     try {
@@ -30,15 +31,20 @@ const run = async () => {
 
         // products get api
         app.get("/products",async(req,res)=>{
-            const cursor= productCollection.find();
-            const products =await cursor.toArray();
 
-            if(!products?.length){
+            /* ====pagination part====== */
+            const limit=Number(req.query.limit);
+
+            /* ============================== */
+
+            const cursor= productCollection.find();
+            const products =await cursor.limit(limit).toArray();
+            
+            /* if(!products?.length){
                 return res.send({success:false, error: "No product found"})
-            }
+            } */
             res.send({success:true, data: products})
         })
-
 
     } catch (error) {
         console.log(error);
