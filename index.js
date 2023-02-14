@@ -1,16 +1,16 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient } = require('mongodb');
 const cors = require('cors');
-const port = process.env.PORT || 5000;
 require('dotenv').config();
+const port = process.env.PORT || 5000;
 const app = express();
 
 //middleware
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.bjmxp4e.mongodb.net/?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const uri = `mongodb+srv://${process.env.BD_USER}:${process.env.DB_PASS}@cluster0.bjmxp4e.mongodb.net/?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 const run = async () => {
@@ -18,16 +18,20 @@ const run = async () => {
         await client.connect();
         const productCollection = client.db('product_bazar').collection("products")
 
-        app.get("/products", async (res, req) => {
-
-        })
-        app.post("/products", async (res, req) => {
+        // product add api
+        app.post("/products", async (req, res) => {
             const product = req.body;
-            if (!product?.name || !product?.price) {
-                return res.send({ success: false, error: "Please provide all information" })
+            if (!product.name || !product.price) {
+                return res.send({ success: false, error: "Please provide all information" });
             }
             const result = await productCollection.insertOne(product)
-            res.send({ success: true, message: `${product?.name} product added successfully` })
+            res.send({ success: true, message: `${product.name} product added successfully` })
+        })
+
+        // products get api
+        app.get("/products",async(req,res)=>{
+            const cursor= productCollection.find();
+            const products =await cursor.toArray();
         })
 
 
