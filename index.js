@@ -32,6 +32,11 @@ const run = async () => {
         app.get("/products",async(req,res)=>{
             const cursor= productCollection.find();
             const products =await cursor.toArray();
+
+            if(!products?.length){
+                return res.send({success:false, error: "No product found"})
+            }
+            res.send({success:true, data: products})
         })
 
 
