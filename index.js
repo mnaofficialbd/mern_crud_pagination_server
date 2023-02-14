@@ -12,8 +12,6 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.BD_USER}:${process.env.DB_PASS}@cluster0.bjmxp4e.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// console.log(MongoClient);
-
 const run = async () => {
     try {
         await client.connect();
@@ -34,16 +32,17 @@ const run = async () => {
 
             /* ====pagination part====== */
             const limit = Number(req.query.limit);
-            const pageNumber = Number(req.query.pageNumber)
+            const pageNumber = Number(req.query.pageNumber);
             /* ============================== */
 
             const cursor = productCollection.find();
             const products = await cursor.skip(limit * pageNumber).limit(limit).toArray();
+            const count = await productCollection.estimatedDocumentCount();
 
             /* if(!products?.length){
                 return res.send({success:false, error: "No product found"})
             } */
-            res.send({ success: true, data: products })
+            res.send({ success: true, data: products, count:count })
         })
 
     } catch (error) {
