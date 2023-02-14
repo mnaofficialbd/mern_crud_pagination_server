@@ -30,20 +30,20 @@ const run = async () => {
         })
 
         // products get api
-        app.get("/products",async(req,res)=>{
+        app.get("/products", async (req, res) => {
 
             /* ====pagination part====== */
-            const limit=Number(req.query.limit);
-
+            const limit = Number(req.query.limit);
+            const pageNumber = Number(req.query.pageNumber)
             /* ============================== */
 
-            const cursor= productCollection.find();
-            const products =await cursor.limit(limit).toArray();
-            
+            const cursor = productCollection.find();
+            const products = await cursor.skip(limit * pageNumber).limit(limit).toArray();
+
             /* if(!products?.length){
                 return res.send({success:false, error: "No product found"})
             } */
-            res.send({success:true, data: products})
+            res.send({ success: true, data: products })
         })
 
     } catch (error) {
